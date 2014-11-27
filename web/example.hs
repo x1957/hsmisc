@@ -1,4 +1,5 @@
 module Main where
+import Data.List
 import Database.HDBC as HDBC(quickQuery', toSql)
 import Database.HDBC.Sqlite3
 import Network.Wai
@@ -29,8 +30,8 @@ handle _ _ _ = return "hello\n"
 render respond content = respond $ responseLBS status200 headers (LC.pack content) where
   headers = map f [("Content-Type", content_type)]
     where f = (\(x,y) -> (CI.mk $ C.pack x, C.pack y))
-          content_type = "text/" ++ if html then "html" else "plain" where
-            html = take 15 content == "<!doctype html>"
+          content_type = "text/" ++ if html content then "html" else "plain" where
+            html = isPrefixOf "<!doctype html>"
 
 dbapp conn req res = (loginfo $ req) >> logdb conn "" >>
                      handle conn req (C.unpack $ rawPathInfo req) >>= (render res)
