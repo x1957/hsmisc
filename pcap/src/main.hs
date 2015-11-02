@@ -4,6 +4,7 @@ import System.Environment (getArgs, getProgName)
 import Text.Printf (printf)
 import Net.Pcap
 import Net.Link
+import Net.Arp
 import Net.Ip
 import Net.Tcp
 import Sure
@@ -11,6 +12,7 @@ import Sure
 main = getArgs >>= \args -> case args of
   [file] -> view t1 file
   ["eth", file] -> view t2 file
+  ["arp", file] -> view t2' file
   ["ip", file] -> view t3 file
   ["tcp", file] -> view t4 file
   otherwise -> getProgName >>= mapM_ putStrLn . help
@@ -22,7 +24,8 @@ view t file = pPcapNGFormatFromFile file >>=
 
 t1 = Just . blockBody
 t2 = t1 >=> link_packet >=> Just . decode_link
-t3 = t2 >=> ip_frame >=> Just . decode_ipv4_packet
+t2' = t2 >=> arp_frame >=> Just . decode_arp_frame
+t3 = t2 >=> ip_frame >=> Just . decode_ipv4_frame
 t4 = t3 >=> tcp_packet >=> Just . decode_tcp_packet
 
 help cmd = [ "Usage:"

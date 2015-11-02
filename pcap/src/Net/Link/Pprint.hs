@@ -12,7 +12,7 @@ instance Show MacHeader where
   show (MacHeader m1 m2 et) = printf "%s -> %s 0x%04x" (show m1)  (show m2) et
 
 show_payload et p = case et of
-  0x0800 -> show $ decode_ipv4_packet p
+  0x0800 -> show $ decode_ipv4_frame p
   otherwise -> printf "etherType: 0x%04x" et
 
 instance Show Frame where

@@ -1,5 +1,5 @@
 module Net.Ip.Format where
-import Data.Bits
+import Data.Bits ((.&.), shiftR)
 import Data.Word (Word8, Word16, Word32, byteSwap32)
 
 data IpHeader = Ipv4Header { _version_and_ihl :: Word8  -- 4, 4

@@ -1,11 +1,8 @@
 module Net.Link.Parse where
 import Control.Monad (replicateM)
-import qualified Data.ByteString.Char8 as C8 (pack)
-import Data.Char (chr)
-import Data.Word (Word8)
 import Text.Parsec.ByteString (Parser)
 import Text.ParserCombinators.Parsec (many, parse)
-import Parse (anyByte, anyWord16, anyWord32)
+import Parse (anyByte, anyWord16, anyWord32, bytes2str)
 import Net.Link.Format
 import Sure
 import Utils
@@ -25,4 +22,4 @@ pFrame = do { h <- pMacHeader
 --            ; crc <- return $ fromIntegral . bytes2int 4 $ [a,b,c,d]
             ; return $ Frame h (reverse p) 0 } :: Parser Frame
 
-decode_link = sure . parse pFrame "" . C8.pack . map (chr . fromEnum) :: [Word8] -> Frame
+decode_link = sure . parse pFrame "" . bytes2str

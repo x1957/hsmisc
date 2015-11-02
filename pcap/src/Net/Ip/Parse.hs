@@ -1,10 +1,7 @@
 module Net.Ip.Parse where
 import Control.Monad (replicateM)
-import qualified Data.ByteString.Char8 as C8 (pack)
-import Data.Char (chr)
-import Data.Word (Word8)
 import Text.Parsec.ByteString (Parser)
-import Parse (anyByte, anyWord16, anyWord32)
+import Parse (anyByte, anyWord16, anyWord32, bytes2str)
 import Text.ParserCombinators.Parsec (many, parse)
 import Net.Ip.Format
 import Parse (anyByte)
@@ -26,4 +23,4 @@ pIpv4Packet = do { ihv4 <- pIpv4Header
                  ; ipData <- many anyByte
                  ; return $ IpPacket ihv4 ipData } :: Parser IpPacket
 
-decode_ipv4_packet = sure . parse pIpv4Packet "" . C8.pack . map (chr . fromEnum) :: [Word8] -> IpPacket
+decode_ipv4_frame = sure . parse pIpv4Packet "" . bytes2str
