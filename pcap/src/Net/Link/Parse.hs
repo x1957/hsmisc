@@ -2,8 +2,8 @@ module Net.Link.Parse where
 import Control.Monad (replicateM)
 import Text.Parsec.ByteString (Parser)
 import Text.ParserCombinators.Parsec (many, parse)
-import Parse (anyByte, anyWord16, anyWord32, bytes2str)
 import Net.Link.Format
+import Parse (anyByte, anyWord16, anyWord32, decode_bytes_with)
 import Sure
 import Utils
 
@@ -22,4 +22,4 @@ pFrame = do { h <- pMacHeader
 --            ; crc <- return $ fromIntegral . bytes2int 4 $ [a,b,c,d]
             ; return $ Frame h (reverse p) 0 } :: Parser Frame
 
-decode_link = sure . parse pFrame "" . bytes2str
+decode_link = sure . decode_bytes_with pFrame

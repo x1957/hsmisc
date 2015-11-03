@@ -3,7 +3,7 @@ import Text.Parsec.ByteString (Parser)
 import Text.ParserCombinators.Parsec (parse)
 import Net.Arp.Format
 import Net.Link.Parse (pMacAddress)
-import Parse (anyByte, anyWord16, anyWord32, bytes2str)
+import Parse (anyByte, anyWord16, anyWord32, decode_bytes_with)
 import Sure
 
 pArpFrame = do { ht <- anyWord16
@@ -17,4 +17,4 @@ pArpFrame = do { ht <- anyWord16
                ; tpa <- anyWord32
                ; return $ ArpFrame ht pt hl pl op sha spa tha tpa } :: Parser ArpFrame
 
-decode_arp_frame = sure . parse pArpFrame "" . bytes2str
+decode_arp_frame = sure . decode_bytes_with pArpFrame
