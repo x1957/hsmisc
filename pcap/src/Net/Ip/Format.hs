@@ -1,6 +1,9 @@
 module Net.Ip.Format where
 import Data.Bits ((.&.), shiftR)
-import Data.Word (Word8, Word16, Word32, byteSwap32)
+import Data.Word (Word8, Word16, Word32)
+import Data.Word.Compat (byteSwap32)
+
+data IpFlags = DF | MF deriving (Eq, Ord, Enum)
 
 data IpHeader = Ipv4Header { _version_and_ihl :: Word8  -- 4, 4
                            , _dscp_and_ecn :: Word8  -- 6, 2

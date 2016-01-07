@@ -1,0 +1,3 @@
+cabal install split
+cabal install parsec
+cabal install base-compat

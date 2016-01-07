@@ -1,6 +1,6 @@
 bin:
 	mkdir -p ../bin
-	ghc main.hs -o ../bin/read-pcap -XStandaloneDeriving
+	ghc main.hs -o ../bin/pcap-read -XStandaloneDeriving
 clean:
 	-rm *.hi *.o
 	-rm Net/*.hi Net/*.o

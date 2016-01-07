@@ -1,9 +1,12 @@
 module Net.Pcap.Pprint where
-import Data.Word (byteSwap16, byteSwap32)
+import Data.Word.Compat (byteSwap16, byteSwap32)
 import Text.Printf (printf)
 import Net.Pcap.Format
 import Net.Link
 import Utils
+
+instance Show Option where
+  show (Option code length value) = printf "code: %04x length: %d value: %s" code (byteSwap16 length) (show value)
 
 instance Show Body where
   show (SectionHeaderBody b v vv l1 l2 o) = unlines
@@ -28,7 +31,7 @@ instance Show Body where
     , printf "capturedLen: %d" cl
     , printf "packetLen: %d" pl
     , printf "package data:\n%s" (show_chunks 4 pd)
-    , printf "options: %s" (show o)
+    , printf "options:\n%s" (unlines . map show $ o)
     ]
   show (Raw bs) = unlines ["raw block:", show_chunks 4 bs]
   show _ = "unparsed block"

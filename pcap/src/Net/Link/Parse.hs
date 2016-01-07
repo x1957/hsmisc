@@ -19,7 +19,7 @@ pFrame = do { h <- pMacHeader
             ; t <- many anyByte
             ; p <- return $ reverse t
 --            ; d:c:b:a:p <- return $ reverse t
---            ; crc <- return $ fromIntegral . bytes2int 4 $ [a,b,c,d]
+--            ; crc <- return $ fromIntegral . bytes2int 256 $ [a,b,c,d]
             ; return $ Frame h (reverse p) 0 } :: Parser Frame
 
 decode_link = sure . decode_bytes_with pFrame

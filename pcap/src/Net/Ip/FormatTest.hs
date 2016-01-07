@@ -2,7 +2,6 @@ module Net.Ip.FormatTest where
 import Net.Ip.Format
 import Test
 
-
 test_version_and_ihl f h l  = test_list "test_version_and_ihl"
                               [ test_equal "" h (version ihv4)
                               , test_equal "" l (ihl ihv4)]

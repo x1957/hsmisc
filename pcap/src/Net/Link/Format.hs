@@ -1,7 +1,7 @@
 module Net.Link.Format where
 import Data.Bits
-import Data.Word (Word8, Word16, Word32, byteSwap32)
-
+import Data.Word (Word8, Word16, Word32)
+import Data.Word.Compat (byteSwap32)
 
 data MacAddress = MacAddress Word8 Word8 Word8 Word8 Word8 Word8
 
