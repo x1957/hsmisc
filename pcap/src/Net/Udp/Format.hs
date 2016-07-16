@@ -1,10 +1,10 @@
 module Net.Udp.Format where
-import Data.Word (Word8, Word16)
+import           Data.Word (Word16, Word8)
 
-data UdpHeader = UdpHeader { source_port :: Word16
-                           , desc_port :: Word16
-                           , length :: Word16
-                           , checksum :: Word16 }
+data UdpHeader = UdpHeader { udp_source_port :: Word16
+                           , udp_desc_port   :: Word16
+                           , udp_length      :: Word16
+                           , udp_checksum    :: Word16 }
 
-data UdpPacket = UdpPacket { udpHeader :: UdpHeader
-                           , udpData :: [Word8] }
+data UdpPacket = UdpPacket { udp_header :: UdpHeader
+                           , udp_data   :: [Word8] }

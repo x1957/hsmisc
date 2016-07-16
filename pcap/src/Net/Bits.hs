@@ -1,6 +1,6 @@
 module Net.Bits where
-import Data.Bits (shiftR)
-import Data.Word (Word8, Word16, Word32)
+import           Data.Bits (shiftR)
+import           Data.Word (Word16, Word32, Word8)
 
 dword2words :: Word16 -> [Word8]
 dword2words dw = map (fromIntegral . fromEnum) [dw `shiftR` 8, dw]

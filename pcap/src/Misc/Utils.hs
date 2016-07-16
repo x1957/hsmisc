@@ -1,6 +1,6 @@
-module Utils where
-import Data.List.Split (chunksOf)
-import Text.Printf (printf)
+module Misc.Utils where
+import           Data.List.Split (chunksOf)
+import           Text.Printf     (printf)
 
 align m n = head . filter ((== 0) . flip mod m) $ [n .. ]
 

@@ -1,8 +1,8 @@
-import Text.ParserCombinators.Parsec (parse)
-import Data.ByteString.Char8 as C8 (pack)
-import Parse
-import Sure
-import Test
+import           Data.ByteString.Char8         as C8 (pack)
+import           Misc.Parse
+import           Misc.Sure
+import           Misc.Test
+import           Text.ParserCombinators.Parsec (parse)
 
 t 1 = test_list "test_anyByte" [ test_equal "" 0 (p "\0\0")
                                , test_equal "" 0 (p "\0\1")

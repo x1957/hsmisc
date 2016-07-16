@@ -1,9 +1,9 @@
 module Net.Ip.Bits where
-import Parse
-import Sure
-import Net.Bits
-import Net.Ip.Format
-import Net.Ip.Parse
+import           Misc.Parse
+import           Misc.Sure
+import           Net.Bits
+import           Net.Ip.Format
+import           Net.Ip.Parse
 
 _encode_ipv4_header (Ipv4Header o1 o2 o34 o56 o78 o9 oa obc q1 q2) =
   [o1, o2] ++ dword2words o34 ++ dword2words o56 ++ dword2words o78 ++

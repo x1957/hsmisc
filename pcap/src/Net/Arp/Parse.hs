@@ -1,10 +1,11 @@
 module Net.Arp.Parse where
-import Text.Parsec.ByteString (Parser)
-import Text.ParserCombinators.Parsec (parse)
-import Net.Arp.Format
-import Net.Link.Parse (pMacAddress)
-import Parse (anyByte, anyWord16, anyWord32, decode_bytes_with)
-import Sure
+import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
+                                                decode_bytes_with)
+import           Misc.Sure
+import           Net.Arp.Format
+import           Net.Link.Parse                (pMacAddress)
+import           Text.Parsec.ByteString        (Parser)
+import           Text.ParserCombinators.Parsec (parse)
 
 pArpFrame = do { ht <- anyWord16
                ; pt <- anyWord16

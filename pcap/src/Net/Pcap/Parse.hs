@@ -1,17 +1,18 @@
 module Net.Pcap.Parse ( pPcapNGFormat
                       , pPcapNGFormatFromFile) where
-import Control.Monad (replicateM)
-import qualified Data.ByteString as BS (readFile)
-import qualified Data.ByteString.Char8 as C8 (pack)
-import Data.Word (Word8, Word32)
-import Data.Word.Compat (byteSwap16, byteSwap32)
-import Text.Parsec.ByteString (Parser)
-import Text.ParserCombinators.Parsec (parse, many)
-import Text.ParserCombinators.Parsec.Char (anyChar)
-import Parse (anyByte, anyWord16, anyWord32)
-import Net.Pcap.Format
-import Sure
-import Utils
+import           Control.Monad                      (replicateM)
+import qualified Data.ByteString                    as BS (readFile)
+import qualified Data.ByteString.Char8              as C8 (pack)
+import           Data.Word                          (Word32, Word8)
+import           Data.Word.Compat                   (byteSwap16, byteSwap32)
+import           Misc.Parse                         (anyByte, anyWord16,
+                                                     anyWord32)
+import           Misc.Sure
+import           Misc.Utils
+import           Net.Pcap.Format
+import           Text.Parsec.ByteString             (Parser)
+import           Text.ParserCombinators.Parsec      (many, parse)
+import           Text.ParserCombinators.Parsec.Char (anyChar)
 
 pOption = do { code <- anyWord16
              ; length <- anyWord16

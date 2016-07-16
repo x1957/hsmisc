@@ -1,9 +1,9 @@
 module Net.Pcap.Pprint where
-import Data.Word.Compat (byteSwap16, byteSwap32)
-import Text.Printf (printf)
-import Net.Pcap.Format
-import Net.Link
-import Utils
+import           Data.Word.Compat (byteSwap16, byteSwap32)
+import           Misc.Utils
+import           Net.Link
+import           Net.Pcap.Format
+import           Text.Printf      (printf)
 
 instance Show Option where
   show (Option code length value) = printf "code: %04x length: %d value: %s" code (byteSwap16 length) (show value)

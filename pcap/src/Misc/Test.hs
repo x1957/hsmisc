@@ -1,5 +1,5 @@
-module Test where
-import Test.HUnit
+module Misc.Test where
+import           Test.HUnit
 
 test_list name = TestList . (map (TestLabel name))
 test_equal name x y = TestCase (assertEqual name x y)

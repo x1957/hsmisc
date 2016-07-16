@@ -1,11 +1,11 @@
 module Net.Ip.Pprint where
-import Data.Bits (shiftR)
-import Data.Word (Word8, Word32)
-import Net.Bits
-import Net.Ip.Format
-import Net.Tcp
-import Text.Printf (printf)
-import Utils
+import           Data.Bits     (shiftR)
+import           Data.Word     (Word32, Word8)
+import           Misc.Utils
+import           Net.Bits
+import           Net.Ip.Format
+import           Net.Tcp
+import           Text.Printf   (printf)
 
 show_ip :: Word32 -> String
 show_ip ip = printf "%d.%d.%d.%d" a b c d where [a,b,c,d] = qword2words ip
@@ -22,15 +22,15 @@ instance Show IpHeader where
     , printf "ihl %d" (ihl ihv4)
     , printf "tot_len %d" (tot_len ihv4)
     , printf "identification %d" (identification ihv4)
-    , printf "flags %d" (flags ihv4)
+    , printf "flags %d" (ip_flags ihv4)
     , printf "offset %d" (offset ihv4)
     , printf "ttl %d" (ttl ihv4)
     , let pn = protocol ihv4
       in  printf "protocol %d (%s)" pn (proto_name pn)
     , printf "check_sum 0x%04x" (check_sum ihv4)
     , printf "%s -> %s"
-      (show_ip $ source_addr ihv4)
-      (show_ip $ desc_addr ihv4)
+      (show_ip $ src_addr ihv4)
+      (show_ip $ dst_addr ihv4)
     ]
 
 show_ip_packet p d = case p of

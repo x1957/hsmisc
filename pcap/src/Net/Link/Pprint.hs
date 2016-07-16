@@ -1,9 +1,9 @@
 module Net.Link.Pprint where
-import Net.Link.Format
+import           Net.Link.Format
 --import Net.Arp.Parse
-import Net.Ip
-import Text.Printf (printf)
-import Utils
+import           Misc.Utils
+import           Net.Ip
+import           Text.Printf     (printf)
 
 instance Show MacAddress where
   show (MacAddress o1 o2 o3 o4 o5 o6) = printf "%02x:%02x:%02x:%02x:%02x:%02x"

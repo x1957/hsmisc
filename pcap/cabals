@@ -1,0 +1,7 @@
+cabal update
+cabal install split
+cabal install parsec
+cabal install base-compat
+cabal install HDBC-postgresql
+cabal install dataenc
+cabal install hunit

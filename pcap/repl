@@ -1,0 +1,2 @@
+cd src
+ghci pcap-read.hs
