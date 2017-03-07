@@ -1,10 +1,12 @@
-all: read import
+all: read import dump_dns
 dir:
 	mkdir -p ../bin
 read: dir
 	ghc pcap-read.hs -o ../bin/pcap-read
 import: dir
 	ghc pcap-import.hs -o ../bin/pcap-import
+dump_dns: dir
+	ghc dump-dns-queries.hs -o ../bin/dump-dns
 clean:
 	-rm *.hi *.o
 	-rm Net/*.hi Net/*.o

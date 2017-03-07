@@ -13,3 +13,7 @@ t4 = t3 >=> tcp_packet >=> Just . decode_tcp_packet
 t4' = t3 >=> udp_packet >=> Just . decode_udp_packet
 t5 = t4' >=> dhcp_data >=> Just . decode_dhcp_packet
   where dhcp_data = Just . udp_data
+
+t_dns = t4' >=> select_dns >=> Just . decode_dns_packet
+  -- TODO: from/to port 53
+  where select_dns = Just . udp_data
