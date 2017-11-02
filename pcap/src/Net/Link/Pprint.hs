@@ -11,13 +11,13 @@ instance Show MacAddress where
 
 name 0x0800 = "IP"
 name 0x0806 = "ARP"
-name _ = "?"
+name _      = "?"
 
 instance Show MacHeader where
-  show (MacHeader m1 m2 et) = printf "%s -> %s 0x%04x (%s)" (show m1)  (show m2) et (name et)
+  show (MacHeader m1 m2 et) = printf "%s <- %s 0x%04x (%s)" (show m1)  (show m2) et (name et)
 
 show_payload et p = case et of
-  0x0800 -> show $ decode_ipv4_frame p
+  0x0800    -> show $ decode_ipv4_frame p
 --  0x0806 -> show $ decode_arp_frame p
   otherwise -> printf "etherType: 0x%04x" et
 
