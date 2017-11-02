@@ -1,12 +1,11 @@
 module Net.Link.Parse where
 import           Control.Monad                 (replicateM)
-import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
+import           Misc.Parse                    (anyByte, anyWord16,
                                                 decode_bytes_with)
 import           Misc.Sure
-import           Misc.Utils
 import           Net.Link.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 pMacAddress = do { [o1, o2, o3, o4, o5, o6] <- replicateM 6 anyByte
                  ; return $ MacAddress o1 o2 o3 o4 o5 o6 } :: Parser MacAddress

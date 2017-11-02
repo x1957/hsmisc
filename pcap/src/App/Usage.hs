@@ -12,12 +12,12 @@ usage actions = getProgName >>= mapM_ putStrLn . helps where
 
 appF actions args = case args of
   [] -> usage'
-  otherwise -> let (file : args') = reverse args
+  _  -> let (file : args') = reverse args
                in  case lookup (reverse args') actions of
     Just a -> a file
-    otherwise -> usage'
+    _      -> usage'
   where usage' = usageF actions
 
 app actions args = case lookup args actions of
   Just a -> a
-  otherwise -> usage actions
+  _      -> usage actions

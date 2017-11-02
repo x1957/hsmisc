@@ -1,6 +1,5 @@
 import           App.Usage
 import           Codec.Binary.Base64      (encode)
-import qualified Data.ByteString          as B
 import           Data.Maybe               (isJust)
 import           Database.HDBC            as HDBC
 import           Database.HDBC.PostgreSQL

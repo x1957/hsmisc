@@ -1,6 +1,5 @@
 module Net.Pcap.Format where
-import           Data.Word        (Word16, Word32, Word8)
-import           Data.Word.Compat (byteSwap32)
+import           Data.Word (Word16, Word32, Word8)
 
 data Option = Option { optionCode   :: Word16
                      , optionLength :: Word16

@@ -3,7 +3,6 @@ module Net.Pcap.Parse ( pPcapNGFormat
 import           Control.Monad                      (replicateM)
 import qualified Data.ByteString                    as BS (readFile)
 import qualified Data.ByteString.Char8              as C8 (pack)
-import           Data.Word                          (Word32, Word8)
 import           Data.Word.Compat                   (byteSwap16, byteSwap32)
 import           Misc.Parse                         (anyByte, anyWord16,
                                                      anyWord32)
@@ -55,7 +54,7 @@ pBody bType = case byteSwap32 bType of
   0x00000001 -> pInterfaceDescriptionBody
   0x00000006 -> pEnhancedPacketBody
   0x0A0D0D0A -> pSectionHeaderBody
-  otherwise -> many anyByte >>= return . Raw :: Parser Body
+  _          -> many anyByte >>= return . Raw :: Parser Body
 
 pBlock = do { bType <- anyWord32
             ; bLength <- anyWord32

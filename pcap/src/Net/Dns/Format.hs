@@ -1,6 +1,6 @@
 -- https://tools.ietf.org/html/rfc1035#section-4
 module Net.Dns.Format where
-import           Data.Word (Word16, Word8)
+import           Data.Word (Word16)
 
 -- https://tools.ietf.org/html/rfc1035#section-4.1.1
 data DnsHeader = DnsHeader { _id      :: Word16
@@ -33,4 +33,3 @@ data DnsMessage = DnsMessage { dnsHeader     :: DnsHeader
                              , dnsAnswer     :: Maybe DnsAnswer
                              , dnsAuthority  :: Maybe DnsAuthority
                              , dnsAdditional :: Maybe DnsAdditional }
-

@@ -9,7 +9,6 @@ import           Misc.Sure
 import           Net.Pcap
 import           Net.TCPIP
 import           System.Environment (getArgs)
-import           Text.Printf        (printf)
 
 actions = [ (["eth"], view t2)
           , (["eth", "header"], view (t2 >=> Just . macHeader))

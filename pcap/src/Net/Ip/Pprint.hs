@@ -2,7 +2,7 @@ module Net.Ip.Pprint where
 import           Data.Bits     (shiftR)
 import           Data.Word     (Word32, Word8)
 import           Misc.Utils
-import           Net.Bits
+import           Net.Bits      (qword2words)
 import           Net.Ip.Format
 import           Net.Tcp
 import           Text.Printf   (printf)
@@ -14,7 +14,7 @@ proto_name 0x01 = "ICMP"
 proto_name 0x02 = "IGMP"
 proto_name 0x06 = "TCP"
 proto_name 0x11 = "UDP"
-proto_name _  = "?"
+proto_name _    = "?"
 
 instance Show IpHeader where
   show ihv4 = unlines
@@ -34,7 +34,7 @@ instance Show IpHeader where
     ]
 
 show_ip_packet p d = case p of
-  0x06 -> show $ decode_tcp_packet d
+  0x06      -> show $ decode_tcp_packet d
   otherwise -> "non-tcp ip packet"
 
 instance Show IpPacket where

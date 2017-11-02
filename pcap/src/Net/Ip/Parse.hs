@@ -5,7 +5,7 @@ import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
 import           Misc.Sure
 import           Net.Ip.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 pIpv4Header = do { vi <- anyByte
                  ; de <- anyByte

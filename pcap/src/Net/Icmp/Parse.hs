@@ -2,10 +2,9 @@ module Net.Icmp.Parse() where
 import           Misc.Binary                   (FromBytes (..))
 import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
                                                 decode_bytes_with)
-import           Misc.Sure
 import           Net.Icmp.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 pIcmpHeader = do { t <- anyByte
                  ; c <- anyByte

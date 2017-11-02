@@ -6,7 +6,7 @@ import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
 import           Misc.Sure
 import           Net.Dhcp.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 pDhcpOption' code = do { len <- anyByte
                        ; str <- replicateM (fromEnum len) anyByte

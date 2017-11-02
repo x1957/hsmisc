@@ -8,7 +8,7 @@ import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
 import           Misc.Sure
 import           Net.Tcp.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 _tcp_offset = fromIntegral . fromEnum . (`shiftR` 12) :: Word16 -> Word8
 _tcp_flags _ofs = [ f | f <- [NS .. ], ((tcp_flag_mask f) .&. _ofs) /= 0 ]

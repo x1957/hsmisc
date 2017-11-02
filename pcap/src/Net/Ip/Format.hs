@@ -1,7 +1,6 @@
 module Net.Ip.Format where
-import           Data.Bits        (shiftR, (.&.))
-import           Data.Word        (Word16, Word32, Word8)
-import           Data.Word.Compat (byteSwap32)
+import           Data.Bits (shiftR, (.&.))
+import           Data.Word (Word16, Word32, Word8)
 
 data IpFlags = DF | MF deriving (Eq, Ord, Enum)
 
