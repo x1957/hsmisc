@@ -1,6 +1,5 @@
 module Net.Ip.Pprint where
-import           Data.Bits     (shiftR)
-import           Data.Word     (Word32, Word8)
+import           Data.Word     (Word32)
 import           Misc.Utils
 import           Net.Bits      (qword2words)
 import           Net.Ip.Format
@@ -34,8 +33,8 @@ instance Show IpHeader where
     ]
 
 show_ip_packet p d = case p of
-  0x06      -> show $ decode_tcp_packet d
-  otherwise -> "non-tcp ip packet"
+  0x06 -> show $ decode_tcp_packet d
+  _    -> "non-tcp ip packet"
 
 instance Show IpPacket where
   show (IpPacket h d) = unlines

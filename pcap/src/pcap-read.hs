@@ -3,9 +3,9 @@ module Main( main
            , module Net.Pcap) where
 import           App.Usage
 import           Control.Monad      ((>=>))
-import           Data.Maybe         (isJust)
+import           Data.Maybe         (catMaybes)
 import           Misc.Binary        (decode)
-import           Misc.Sure
+import           Misc.Sure          (sure)
 import           Net.Pcap
 import           Net.TCPIP
 import           System.Environment (getArgs)
@@ -31,8 +31,9 @@ actions = [ (["eth"], view t2)
 
 info t file = pPcapNGFormatFromFile file >>= return . t >>= print
 
+view :: Show a => (Block -> Maybe a) -> FilePath -> IO ()
 view t file = pPcapNGFormatFromFile file >>=
-              return . map sure . filter isJust .
+              return . catMaybes .
               map t . blocks . sure >>=
               mapM_ print
 

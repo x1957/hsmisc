@@ -1,11 +1,11 @@
 module Net.Udp.Parse where
 import           Misc.Binary                   (FromBytes (..))
-import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
+import           Misc.Parse                    (anyByte, anyWord16,
                                                 decode_bytes_with)
 import           Misc.Sure
 import           Net.Udp.Format
 import           Text.Parsec.ByteString        (Parser)
-import           Text.ParserCombinators.Parsec (many, parse)
+import           Text.ParserCombinators.Parsec (many)
 
 pUdpHeader = do { sp <- anyWord16
                 ; dp <- anyWord16
