@@ -5,6 +5,7 @@ import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
                                                 decode_bytes_with)
 import           Misc.Sure                     (sure)
 import           Net.Dhcp.Format
+import           Net.Ip.Format                 (IPv4Addr (IPv4Addr))
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
 
@@ -26,7 +27,7 @@ pDhcpOptions = do { magic <- anyWord32
 pDhcpMessage = do { [op, htype, hlen, hops] <- replicateM 4 anyByte
                   ; xid <- anyWord32
                   ; [secs, flags] <- replicateM 2 anyWord16
-                  ; [ciAddr, yiAddr, siAddr, giAddr] <- replicateM 4 anyWord32
+                  ; [ciAddr, yiAddr, siAddr, giAddr] <- replicateM 4 (fmap IPv4Addr anyWord32)
                   ; [ch1, ch2, ch3, ch4] <- replicateM 4 anyWord32
                   ; sname <- replicateM 16 anyWord32
                   ; file <- replicateM 32 anyWord32

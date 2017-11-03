@@ -38,8 +38,8 @@ memory conn file =
 save_ip_packet conn ipp =
   query conn ip_sql [ toSql . fromEnum . tot_len $ iph
                     , toSql . fromEnum . protocol $ iph
-                    , toSql . show_ip . src_addr $ iph
-                    , toSql . show_ip . dst_addr $ iph
+                    , toSql . show . src_addr $ iph
+                    , toSql . show . dst_addr $ iph
                     , toSql . encode . ipData $ ipp ]
   where
     ip_sql = "insert into ip_packet (tot_len, protocol, src_addr, dst_addr, payload_base64) values (?, ?, ?, ?, ?);"

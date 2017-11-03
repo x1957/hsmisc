@@ -1,6 +1,7 @@
 -- https://tools.ietf.org/html/rfc1541
 module Net.Dhcp.Format where
-import           Data.Word (Word16, Word32, Word8)
+import           Data.Word     (Word16, Word32, Word8)
+import           Net.Ip.Format (IPv4Addr)
 
 -- https://tools.ietf.org/html/rfc2132
 -- DHCP Options and BOOTP Vendor Extensions
@@ -23,10 +24,10 @@ data DhcpMessage = DhcpMessage { op      :: Word8
                                , secs    :: Word16
                                , flags   :: Word16
                                  --
-                               , ciAddr  :: Word32 -- client IP address
-                               , yiAddr  :: Word32 -- your IP address
-                               , siAddr  :: Word32 -- server IP address
-                               , giAddr  :: Word32 -- gateway IP address switched by relay
+                               , ciAddr  :: IPv4Addr -- client IP address
+                               , yiAddr  :: IPv4Addr -- your IP address
+                               , siAddr  :: IPv4Addr -- server IP address
+                               , giAddr  :: IPv4Addr -- gateway IP address switched by relay
                                , chAddr  :: (Word32, Word32, Word32, Word32)
 
                                  -- 192 octets of 0s. BOOTP legacy

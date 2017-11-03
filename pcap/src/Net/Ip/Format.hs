@@ -4,6 +4,8 @@ import           Data.Word (Word16, Word32, Word8)
 
 data IpFlags = DF | MF deriving (Eq, Ord, Enum)
 
+newtype IPv4Addr = IPv4Addr Word32
+
 data IpHeader = Ipv4Header { _version_and_ihl  :: Word8  -- 4, 4
                            , _dscp_and_ecn     :: Word8  -- 6, 2
                            , tot_len           :: Word16
@@ -12,8 +14,8 @@ data IpHeader = Ipv4Header { _version_and_ihl  :: Word8  -- 4, 4
                            , ttl               :: Word8
                            , protocol          :: Word8
                            , check_sum         :: Word16
-                           , src_addr          :: Word32
-                           , dst_addr          :: Word32 }
+                           , src_addr          :: IPv4Addr
+                           , dst_addr          :: IPv4Addr }
 
 data IpPacket = IpPacket { ipHeader :: IpHeader
                          , ipData   :: [Word8] }

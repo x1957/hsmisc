@@ -15,8 +15,8 @@ pIpv4Header = do { vi <- anyByte
                  ; ttl <- anyByte
                  ; p <- anyByte
                  ; cs <- anyWord16
-                 ; src <- anyWord32
-                 ; desc <- anyWord32
+                 ; src <- fmap IPv4Addr anyWord32
+                 ; desc <- fmap IPv4Addr anyWord32
                  ; return $ Ipv4Header vi de tl i fo ttl p cs src desc } :: Parser IpHeader
 
 pIpv4Packet = do { ihv4 <- pIpv4Header

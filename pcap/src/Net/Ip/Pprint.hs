@@ -1,13 +1,12 @@
 module Net.Ip.Pprint where
-import           Data.Word     (Word32)
-import           Misc.Utils
+import           Misc.Utils    (show_chunks)
 import           Net.Bits      (qword2words)
 import           Net.Ip.Format
-import           Net.Tcp
+import           Net.Tcp       (decode_tcp_packet)
 import           Text.Printf   (printf)
 
-show_ip :: Word32 -> String
-show_ip ip = printf "%d.%d.%d.%d" a b c d where [a,b,c,d] = qword2words ip
+instance Show IPv4Addr where
+  show (IPv4Addr ip) = printf "%d.%d.%d.%d" a b c d where [a,b,c,d] = qword2words ip
 
 proto_name 0x01 = "ICMP"
 proto_name 0x02 = "IGMP"
@@ -28,8 +27,8 @@ instance Show IpHeader where
       in  printf "protocol %d (%s)" pn (proto_name pn)
     , printf "check_sum 0x%04x" (check_sum ihv4)
     , printf "%s -> %s"
-      (show_ip $ src_addr ihv4)
-      (show_ip $ dst_addr ihv4)
+      (show $ src_addr ihv4)
+      (show $ dst_addr ihv4)
     ]
 
 show_ip_packet p d = case p of
