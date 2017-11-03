@@ -36,9 +36,8 @@ t4' = t3 >=>
       Just . decode_udp_packet :: T UdpPacket
 
 t5 = t4' >=>
-     dhcp_data >=>
+     dhcp_packet >=>
      Just . decode_dhcp_packet :: T DhcpPacket
-  where dhcp_data = Just . udp_data
 
 t_dns = t4' >=>
         dns_packet >=>

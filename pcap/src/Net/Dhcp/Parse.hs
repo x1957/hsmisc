@@ -3,7 +3,7 @@ import           Control.Monad                 (replicateM)
 import           Misc.Binary                   (FromBytes (..))
 import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
                                                 decode_bytes_with)
-import           Misc.Sure
+import           Misc.Sure                     (sure)
 import           Net.Dhcp.Format
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
@@ -14,8 +14,10 @@ pDhcpOption' code = do { len <- anyByte
                          code len str } :: Parser DhcpOption
 
 pDhcpOption = do { code <- anyByte
-                 ; if code == 0 then return Pad
-                   else pDhcpOption' code } :: Parser DhcpOption
+                 ; case code of
+                     0   -> return Pad
+                     255 -> return End
+                     _   -> pDhcpOption' code } :: Parser DhcpOption
 
 pDhcpOptions = do { magic <- anyWord32
                   ; options <- many pDhcpOption

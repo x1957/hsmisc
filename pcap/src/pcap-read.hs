@@ -25,6 +25,7 @@ actions = [ (["eth"], view t2)
           , (["tcp", "data"], view (t4 >=> Just . tcp_data))
           , (["udp"], view t4')
           , (["dhcp"], view t5)
+          , (["dhcp", "data"], view (t4' >=> dhcp_packet))
           , (["dns"], view t_dns)
           , (["info"], info (pcapInfo . sure))
           , ([], view t1)]
