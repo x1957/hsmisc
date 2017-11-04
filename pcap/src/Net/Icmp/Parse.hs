@@ -1,4 +1,4 @@
-module Net.Icmp.Parse() where
+module Net.Icmp.Parse where
 import           Misc.Binary                   (FromBytes (..))
 import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
                                                 decode_bytes_with)

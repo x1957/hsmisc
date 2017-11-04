@@ -1,6 +1,6 @@
 module Net.Pcap.Pprint where
 import           Data.Word.Compat (byteSwap16, byteSwap32)
-import           Misc.Utils
+import           Misc.Utils       (show_chunks)
 import           Net.Pcap.Format
 import           Text.Printf      (printf)
 

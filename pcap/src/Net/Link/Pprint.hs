@@ -1,8 +1,7 @@
 module Net.Link.Pprint where
+import           Misc.Utils      (show_chunks)
+import           Net.Ip          (decode_ipv4_frame)
 import           Net.Link.Format
---import Net.Arp.Parse
-import           Misc.Utils
-import           Net.Ip
 import           Text.Printf     (printf)
 
 instance Show MacAddress where
@@ -14,7 +13,7 @@ name 0x0806 = "ARP"
 name _      = "?"
 
 instance Show MacHeader where
-  show (MacHeader m1 m2 et) = printf "%s <- %s 0x%04x (%s)" (show m1)  (show m2) et (name et)
+  show (MacHeader m1 m2 et) = printf "%s <- %s 0x%04x (%s)" (show m1) (show m2) et (name et)
 
 show_payload et p = case et of
   0x0800 -> show $ decode_ipv4_frame p

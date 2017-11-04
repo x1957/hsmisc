@@ -60,7 +60,7 @@ pBlock = do { bType <- anyWord32
             ; bLength <- anyWord32
             ; len <- return $ fromEnum (byteSwap32 bLength) - 12
             ; bData <- replicateM len anyChar
-            ; tLength <- anyWord32
+            ; _tLength <- anyWord32
             ; body <- return $ sure $ parse (pBody bType) "" $ C8.pack bData
             ; return $ Block bType bLength body } :: Parser Block
 

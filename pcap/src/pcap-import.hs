@@ -1,10 +1,10 @@
-import           App.Usage
+import           App.Usage                (appF)
 import           Codec.Binary.Base64      (encode)
-import           Data.Maybe               (isJust)
+import           Data.Maybe               (catMaybes)
 import           Database.HDBC            as HDBC
 import           Database.HDBC.PostgreSQL
 import           Db.Pg
-import           Misc.Sure
+import           Misc.Sure                (sure)
 import           Net.Pcap
 import           Net.TCPIP
 import           System.Environment       (getArgs, getEnv)
@@ -32,7 +32,7 @@ memoryF file = with_conn $ \conn -> memory conn file
 memory conn file =
   pPcapNGFormatFromFile file >>=
   return . sure >>=
-  return . map sure . filter isJust . map t3 . blocks >>=
+  return . catMaybes . map t3 . blocks >>=
   mapM_ (save_ip_packet conn)
 
 save_ip_packet conn ipp =

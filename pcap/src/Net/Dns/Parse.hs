@@ -44,7 +44,7 @@ pDnsQuestionEntry = do
 pDnsMessage = do
   header <- pDnsHeader
   qEntries <- replicateM (fromEnum $ qnCount header) pDnsQuestionEntry
-  bs <- many anyByte
+  _bs <- many anyByte
   return $ DnsMessage header (DnsQuestion qEntries) Nothing Nothing Nothing
 
 decode_dns_packet = sure . decode_bytes_with pDnsMessage
