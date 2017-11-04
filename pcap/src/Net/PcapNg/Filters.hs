@@ -11,11 +11,12 @@ if' x y z = if x then y else z
 just p q = if' p (Just q) Nothing
 select predicate q = just (predicate q) q
 
+link_packet :: Body -> Maybe [Word8]
 link_packet db = case db of
   EnhancedPacketBody _ _ _ cl _ pd _ -> Just $ take (fromEnum cl) pd
   _                                  -> Nothing
 
-  -- https://en.wikipedia.org/wiki/EtherType
+-- https://en.wikipedia.org/wiki/EtherType
 ether_type :: Word16 -> Frame -> Maybe [Word8]
 ether_type et (Frame mh p _) = just (et == (etherType mh)) p
 

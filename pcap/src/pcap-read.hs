@@ -1,49 +1,56 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Main where
 
 import           App.Usage          (appF)
 import           Control.Monad      ((>=>))
-import           Data.Maybe         (catMaybes)
-import           Misc.Binary        (justDecode)
+import           Data.Maybe         (mapMaybe)
 import           Misc.Sure          (sure)
 import qualified Net.Pcap           as Pcap ()
-import           Net.PcapNg         as PcapNg
-import           Net.TCPIP          (IcmpPacket, icmp_header, ipHeader,
-                                     macHeader, tcp_data)
+import           Net.PcapNg         as PcapNg (PcapNGFile, blockBody, blocks,
+                                               link_packet,
+                                               pPcapNGFormatFromFile, pcapInfo)
+import           Net.TCPIP          (ArpFrame, DhcpPacket, DnsMessage, Frame,
+                                     IcmpPacket, IpPacket, TcpPacket, UdpPacket,
+                                     icmp_header, ipHeader, macHeader, tcp_data)
+import           Query              (Query, query)
 import           System.Environment (getArgs)
 import           Text.Parsec.Error  (ParseError)
 
-actions = [ (["eth"], view t2)
-          , (["eth", "header"], view (t2 >=>
-                                      Just . macHeader))
-          , (["arp"], view t2')
-          , (["ip"], view t3)
-          , (["ip", "header"], view (t3 >=>
-                                     Just . ipHeader))
-          , (["icmp"], view (t3 >=>
-                             icmp_packet >=>
-                             justDecode :: T IcmpPacket))
-          , (["icmp", "header"], view (t3 >=>
-                                       icmp_packet >=>
-                                       justDecode >=>
-                                       Just . icmp_header))
-          , (["tcp"], view t4)
-          , (["tcp", "data"], view (t4 >=> Just . tcp_data))
-          , (["udp"], view t4')
-          , (["dhcp"], view t5)
-          , (["dhcp", "data"], view (t4' >=> dhcp_packet))
-          , (["dns"], view t_dns)
-          , (["info"], info (pcapInfo . sure))
-          , ([], view t1)]
+actions :: [([String], FilePath -> IO ())]
+actions = [ (["info"], info (pcapInfo . sure))
+          , ([], view Just)
+          ] ++
+          queries
 
-info :: Show a =>
-     (Either ParseError PcapNGFile -> a)
-     -> FilePath -> IO ()
+queries =
+          [ (["eth"], view (query :: Query Frame))
+          , (["eth", "header"], view ((query :: Query Frame) >=>
+                                      Just . macHeader))
+          , (["arp"], view (query :: Query ArpFrame))
+          , (["ip"], view (query :: Query IpPacket))
+          , (["ip", "header"], view ((query:: Query IpPacket) >=>
+                                     Just . ipHeader))
+          , (["icmp"], view (query :: Query IcmpPacket))
+          , (["icmp", "header"], view ((query :: Query IcmpPacket) >=>
+                                       Just . icmp_header))
+          , (["tcp"], view (query :: Query TcpPacket))
+          , (["tcp", "data"], view ((query :: Query TcpPacket) >=> Just . tcp_data))
+          , (["udp"], view (query :: Query UdpPacket))
+          , (["dhcp"], view (query :: Query DhcpPacket))
+          , (["dns"], view (query :: Query DnsMessage))
+          ]
+
+type ParseResult a = Either ParseError a
+
+info :: Show a => (ParseResult PcapNGFile -> a) -> FilePath -> IO ()
 info t file = fmap t (pPcapNGFormatFromFile file) >>= print
 
-view :: Show a => (Block -> Maybe a) -> FilePath -> IO ()
-view t file = pPcapNGFormatFromFile file >>=
-              return . catMaybes .
-              map t . blocks . sure >>=
-              mapM_ print
+view :: forall a . Show a => Query a -> FilePath -> IO ()
+view q file = fmap (runQuery q) (pPcapNGFormatFromFile file :: IO (ParseResult PcapNGFile)) >>=
+              (mapM_ print :: [a] -> IO ())
+
+runQuery :: Query a -> ParseResult PcapNGFile -> [a]
+runQuery q = mapMaybe (Just . blockBody >=> link_packet >=> q) . blocks . sure
 
 main = getArgs >>= appF actions

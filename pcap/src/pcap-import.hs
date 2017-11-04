@@ -1,12 +1,14 @@
 import           App.Usage                (appF)
 import           Codec.Binary.Base64      (encode)
-import           Data.Maybe               (catMaybes)
+import           Control.Monad            ((>=>))
+import           Data.Maybe               (mapMaybe)
 import           Database.HDBC            as HDBC
 import           Database.HDBC.PostgreSQL
 import           Db.Pg
 import           Misc.Sure                (sure)
 import           Net.PcapNg
 import           Net.TCPIP
+import qualified Query                    as Q
 import           System.Environment       (getArgs, getEnv)
 
 query = HDBC.quickQuery'
@@ -32,7 +34,7 @@ memoryF file = with_conn $ \conn -> memory conn file
 memory conn file =
   pPcapNGFormatFromFile file >>=
   return . sure >>=
-  return . catMaybes . map t3 . blocks >>=
+  return . mapMaybe (Just . blockBody >=> link_packet >=> (Q.query :: Q.Query IpPacket)) . blocks >>=
   mapM_ (save_ip_packet conn)
 
 save_ip_packet conn ipp =
