@@ -5,7 +5,7 @@ import           Database.HDBC            as HDBC
 import           Database.HDBC.PostgreSQL
 import           Db.Pg
 import           Misc.Sure                (sure)
-import           Net.Pcap
+import           Net.PcapNg
 import           Net.TCPIP
 import           System.Environment       (getArgs, getEnv)
 

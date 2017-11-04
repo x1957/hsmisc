@@ -1,8 +1,9 @@
-module Net.Pcap.Filters where
-import           GHC.Word        (Word16, Word8)
+module Net.PcapNg.Filters where
+
+import           GHC.Word          (Word16, Word8)
 import           Net.Ip
 import           Net.Link
-import           Net.Pcap.Format
+import           Net.PcapNg.Format
 import           Net.Tcp
 import           Net.Udp
 

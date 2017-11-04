@@ -1,14 +1,17 @@
-module Net.Pcap.Parse ( pPcapNGFormat
-                      , pPcapNGFormatFromFile) where
+module Net.PcapNg.Parse
+  ( pPcapNGFormat
+  , pPcapNGFormatFromFile
+  ) where
+
 import           Control.Monad                      (replicateM)
 import qualified Data.ByteString                    as BS (readFile)
 import qualified Data.ByteString.Char8              as C8 (pack)
 import           Data.Word.Compat                   (byteSwap16, byteSwap32)
 import           Misc.Parse                         (anyByte, anyWord16,
                                                      anyWord32)
-import           Misc.Sure
-import           Misc.Utils
-import           Net.Pcap.Format
+import           Misc.Sure                          (sure)
+import           Misc.Utils                         (align)
+import           Net.PcapNg.Format
 import           Text.Parsec.ByteString             (Parser)
 import           Text.ParserCombinators.Parsec      (many, parse)
 import           Text.ParserCombinators.Parsec.Char (anyChar)

@@ -1,12 +1,11 @@
-module Main( main
---           , module Net.TCPIP
-           , module Net.Pcap) where
-import           App.Usage
+module Main where
+
+import           App.Usage          (appF)
 import           Control.Monad      ((>=>))
 import           Data.Maybe         (catMaybes)
 import           Misc.Binary        (decode)
 import           Misc.Sure          (sure)
-import           Net.Pcap
+import           Net.PcapNg
 import           Net.TCPIP
 import           System.Environment (getArgs)
 

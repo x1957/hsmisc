@@ -1,8 +1,9 @@
-module Net.Pcap.Query where
-import           Control.Monad    ((>=>))
-import           Misc.Binary      (justDecode)
-import           Net.Pcap.Filters
-import           Net.Pcap.Format
+module Net.PcapNg.Query where
+
+import           Control.Monad      ((>=>))
+import           Misc.Binary        (justDecode)
+import           Net.PcapNg.Filters
+import           Net.PcapNg.Format
 import           Net.TCPIP
 
 type Trans a b = a -> Maybe b

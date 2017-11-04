@@ -1,4 +1,4 @@
-module Net.Pcap.Format where
+module Net.PcapNg.Format where
 import           Data.Word (Word16, Word32, Word8)
 
 data Option = Option { optionCode   :: Word16

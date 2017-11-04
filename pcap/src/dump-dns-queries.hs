@@ -1,12 +1,12 @@
-module Main( main
-           , module Net.Pcap) where
+module Main where
+
 import           Control.Monad      ((>=>))
 import           Data.List          (intercalate)
 import           Data.Maybe         (catMaybes)
 import           Misc.Plain         (plain)
 import           Misc.Sure          (sure)
 import           Net.Dns.Format     (dnsQuestion, qEntries, qName)
-import           Net.Pcap           (blocks, pPcapNGFormatFromFile, t_dns)
+import           Net.PcapNg         (blocks, pPcapNGFormatFromFile, t_dns)
 import           System.Environment (getArgs, getProgName)
 
 view t file = pPcapNGFormatFromFile file >>=

@@ -1,8 +1,9 @@
-module Net.Pcap.Pprint where
-import           Data.Word.Compat (byteSwap16, byteSwap32)
-import           Misc.Utils       (show_chunks)
-import           Net.Pcap.Format
-import           Text.Printf      (printf)
+module Net.PcapNg.Pprint where
+
+import           Data.Word.Compat  (byteSwap16, byteSwap32)
+import           Misc.Utils        (show_chunks)
+import           Net.PcapNg.Format
+import           Text.Printf       (printf)
 
 instance Show Option where
   show (Option code length value) = printf "code: %04x length: %d value: %s" code (byteSwap16 length) (show value)
