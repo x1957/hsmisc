@@ -1,4 +1,5 @@
 module Net.PcapNg.Format where
+
 import           Data.Word (Word16, Word32, Word8)
 
 data Option = Option { optionCode   :: Word16
@@ -11,11 +12,11 @@ data Body = Raw [Word8]
                               , minorVersion   :: Word16
                               , sectionLength1 :: Word32
                               , sectionLength2 :: Word32
-                              , raw_options    :: [Word32] }
-          | InterfaceDescriptionBody { linkType    :: Word16
-                                     , reserved    :: Word16
-                                     , snapLen     :: Word32
-                                     , raw_options :: [Word32] }
+                              , rawOptions     :: [Word32] }
+          | InterfaceDescriptionBody { linkType   :: Word16
+                                     , reserved   :: Word16
+                                     , snapLen    :: Word32
+                                     , rawOptions :: [Word32] }
           | EnhancedPacketBody { interfaceID   :: Word32
                                , timestampHigh :: Word32
                                , timestampLow  :: Word32
@@ -23,8 +24,8 @@ data Body = Raw [Word8]
                                , packetLen     :: Word32
                                , packetData    :: [Word8]
                                , options       :: [Option] }
-          | SimplePacketBlock { simple_packetLen  :: Word32
-                              , simple_packetData :: [Word32] }
+          | SimplePacketBlock { simplePacketLen  :: Word32
+                              , simplePacketData :: [Word32] }
           | PacketBlock [Word32] -- obsolete
           | NameResolutionBlock {}
 
@@ -32,8 +33,8 @@ data Block = Block { blockType   :: Word32
                    , blockLength :: Word32
                    , blockBody   :: Body }
 
-data PcapNGFile = PcapNGFile { blocks :: [Block] }
+newtype PcapNGFile = PcapNGFile { blocks :: [Block] }
 
-data PcapNGFileInfo = PcapNGFileInfo { num_of_blocks :: Int } deriving (Show)
+newtype PcapNGFileInfo = PcapNGFileInfo { numOfBlocks :: Int } deriving (Show)
 
 pcapInfo (PcapNGFile blocks) = PcapNGFileInfo (length blocks)
