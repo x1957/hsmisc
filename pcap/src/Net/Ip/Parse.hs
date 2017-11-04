@@ -7,6 +7,8 @@ import           Net.Ip.Format
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
 
+pIPv4Addr = fmap IPv4Addr anyWord32 :: Parser IPv4Addr
+
 pIpv4Header = do { vi <- anyByte
                  ; de <- anyByte
                  ; tl <- anyWord16
@@ -15,8 +17,8 @@ pIpv4Header = do { vi <- anyByte
                  ; ttl <- anyByte
                  ; p <- anyByte
                  ; cs <- anyWord16
-                 ; src <- fmap IPv4Addr anyWord32
-                 ; desc <- fmap IPv4Addr anyWord32
+                 ; src <- pIPv4Addr
+                 ; desc <- pIPv4Addr
                  ; return $ Ipv4Header vi de tl i fo ttl p cs src desc } :: Parser IpHeader
 
 pIpv4Packet = do { ihv4 <- pIpv4Header

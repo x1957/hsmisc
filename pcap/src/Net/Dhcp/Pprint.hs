@@ -4,6 +4,7 @@ import           Net.Dhcp.Format
 import           Net.Ip.Pprint   ()
 import           Text.Printf     (printf)
 
+deriving instance Show DHCPMessageType
 deriving instance Show DhcpOption
 deriving instance Show DhcpOptions
 deriving instance Show DhcpPacket
@@ -20,8 +21,10 @@ instance Show DhcpMessage where
          _chAddr
          _sname
          _file
-         opts
-       ) = unlines $
+         _opts
+       ) =
+    let opts = filter (\opts -> case opts of Pad -> False; End -> False; _ -> True) $ dhcp_options _opts
+    in  unlines $
     [ printf "op: 0x%02x, htype: 0x%02x, hlen: 0x%02x, hops: 0x%02x" op htype hlen hopts
     , printf "xid: 0x%08x" xid
     , printf "secs: 0x%04x, flags: 0x%04x" secs flags
@@ -30,6 +33,6 @@ instance Show DhcpMessage where
     , "siAddr: " ++ show siAddr
     , "giAddr: " ++ show giAddr
     -- chAddr
-    , show (length $ dhcp_options opts) ++ " options"
-    , printf "magic: 0x%08x" (magic opts)
-    ] ++ map show (dhcp_options opts)
+    , show (length opts) ++ " options"
+    , printf "magic: 0x%08x" (magic _opts)
+    ] ++ map show opts
