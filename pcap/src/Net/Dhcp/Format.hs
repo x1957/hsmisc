@@ -19,7 +19,8 @@ data DHCPMessageType = INVALID_DHCP_TYPE -- 0
 -- DHCP Options and BOOTP Vendor Extensions
 data DhcpOption = DhcpRawOption { code :: Word8
                                 , len  :: Word8
-                                , str  :: [Word8] }
+                                , str  :: [Word8]
+                                }
                 | Pad                                     -- code=0 https://tools.ietf.org/html/rfc2132#section-3.1
                 | SubnetMask IPv4Addr                     -- code=1 https://tools.ietf.org/html/rfc2132#section-3.3
                 | TimeOffset Word32                       -- code=2
@@ -54,8 +55,9 @@ data DhcpOption = DhcpRawOption { code :: Word8
                 -- ...
                 | End                                     -- code=255 https://tools.ietf.org/html/rfc2132#section-3.2
 
-data DhcpOptions = DhcpOptions { magic        :: Word32 -- 0x63825363
-                               , dhcp_options :: [DhcpOption] }
+data DhcpOptions = DhcpOptions { magic       :: Word32 -- 0x63825363
+                               , dhcpOptions :: [DhcpOption]
+                               }
 
 data DhcpMessage = DhcpMessage { op      :: Word8
                                , htype   :: Word8
@@ -77,7 +79,8 @@ data DhcpMessage = DhcpMessage { op      :: Word8
                                , sname   :: [Word32] -- 64 Bytes
                                , file    :: [Word32] -- 128 Bytes
 
-                               , options :: DhcpOptions }
+                               , options :: DhcpOptions
+                               }
 
 data DhcpPacket = DhcpRaw DhcpMessage
                 | DhcpDiscover DhcpMessage

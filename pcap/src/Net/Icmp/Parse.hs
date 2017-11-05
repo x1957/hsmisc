@@ -1,23 +1,27 @@
 module Net.Icmp.Parse where
+
 import           Misc.Binary                   (FromBytes (..))
-import           Misc.Parse                    (anyByte, anyWord16, anyWord32,
-                                                decode_bytes_with)
-import           Net.Icmp.Format
+import           Misc.Parse                    (anyByte, decodeBytesWith,
+                                                word16, word32)
+import           Net.Icmp.Format               (IcmpHeader (IcmpHeader),
+                                                IcmpPacket (IcmpPacket))
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
 
 pIcmpHeader = do { t <- anyByte
                  ; c <- anyByte
-                 ; sum <- anyWord16
-                 ; rest <- anyWord32
-                 ; return $ IcmpHeader t c sum rest } :: Parser IcmpHeader
+                 ; sum <- word16
+                 ; rest <- word32
+                 ; return $ IcmpHeader t c sum rest
+                 } :: Parser IcmpHeader
 
 pIcmpPacket = do { h <- pIcmpHeader
                  ; d <- many anyByte
-                 ; return $ IcmpPacket h d } :: Parser IcmpPacket
+                 ; return $ IcmpPacket h d
+                 } :: Parser IcmpPacket
 
 instance FromBytes IcmpHeader where
-  decode = decode_bytes_with pIcmpHeader
+  decode = decodeBytesWith pIcmpHeader
 
 instance FromBytes IcmpPacket where
-  decode = decode_bytes_with pIcmpPacket
+  decode = decodeBytesWith pIcmpPacket

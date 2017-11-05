@@ -1,24 +1,23 @@
 module Net.Link.Pprint where
+
 import           Misc.Utils      (show_chunks)
-import           Net.Ip          (decode_ipv4_frame)
-import           Net.Link.Format
-import           Text.Printf     (printf)
+import           Net.Link.Format (Frame (Frame), MacAddress (MacAddress),
+                                  MacHeader (MacHeader))
+import           Text.Printf     (PrintfArg, formatArg, formatString, printf)
 
 instance Show MacAddress where
   show (MacAddress o1 o2 o3 o4 o5 o6) = printf "%02x:%02x:%02x:%02x:%02x:%02x"
                                         o1 o2 o3 o4 o5 o6
 
-name 0x0800 = "IP"
-name 0x0806 = "ARP"
-name _      = "?"
+instance PrintfArg MacAddress where
+  formatArg = formatString . show
+
+ethTypeName 0x0800 = "IP"
+ethTypeName 0x0806 = "ARP"
+ethTypeName _      = "?"
 
 instance Show MacHeader where
-  show (MacHeader m1 m2 et) = printf "%s <- %s 0x%04x (%s)" (show m1) (show m2) et (name et)
-
-show_payload et p = case et of
-  0x0800 -> show $ decode_ipv4_frame p
---  0x0806 -> show $ decode_arp_frame p
-  _      -> printf "etherType: 0x%04x" et
+  show (MacHeader dst src et) = printf "%s <- %s 0x%04x (%s)" dst src et (ethTypeName et)
 
 instance Show Frame where
   show (Frame h p c) = unlines

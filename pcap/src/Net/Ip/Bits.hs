@@ -11,4 +11,4 @@ _encode_ipv4_header (Ipv4Header o1 o2 o34 o56 o78 o9 oa obc (IPv4Addr q1) (IPv4A
 
 instance Binary IpHeader where
   encode = _encode_ipv4_header
-  decode = Right . sure . decode_bytes_with pIpv4Header
+  decode = Right . sure . decodeBytesWith pIpv4Header

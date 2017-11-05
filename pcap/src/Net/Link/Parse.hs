@@ -1,29 +1,32 @@
 module Net.Link.Parse where
-import           Control.Monad                 (replicateM)
+
 import           Misc.Binary                   (FromBytes (..))
-import           Misc.Parse                    (anyByte, anyWord16,
-                                                decode_bytes_with)
-import           Misc.Sure                     (sure)
-import           Net.Link.Format
+import           Misc.Parse                    (anyByte, decodeBytesWith,
+                                                nBytes, word16)
+import           Net.Link.Format               (Frame (Frame),
+                                                MacAddress (MacAddress),
+                                                MacHeader (MacHeader))
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
 
-pMacAddress = do { [o1, o2, o3, o4, o5, o6] <- replicateM 6 anyByte
-                 ; return $ MacAddress o1 o2 o3 o4 o5 o6 } :: Parser MacAddress
+pMacAddress = do { [o1, o2, o3, o4, o5, o6] <- nBytes 6
+                 ; return $ MacAddress o1 o2 o3 o4 o5 o6
+                 } :: Parser MacAddress
 
-pMacHeader = do { m1 <- pMacAddress
-                ; m2 <- pMacAddress
-                ; et <- anyWord16
-                ; return $ MacHeader m1 m2 et } :: Parser MacHeader
+pMacHeader = do { dst <- pMacAddress
+                ; src <- pMacAddress
+                ; et <- word16
+                ; return $ MacHeader dst src et
+                } :: Parser MacHeader
 
 pFrame = do { h <- pMacHeader
             ; t <- many anyByte
-            ; p <- return $ reverse t
+            -- ; let p = reverse t
 --            ; d:c:b:a:p <- return $ reverse t
 --            ; crc <- return $ fromIntegral . bytes2int 256 $ [a,b,c,d]
-            ; return $ Frame h (reverse p) 0 } :: Parser Frame
-
-decode_link = sure . decode_bytes_with pFrame
+            ; let crc = 0 -- TODO
+            ; return $ Frame h t crc
+            } :: Parser Frame
 
 instance FromBytes Frame where
-  decode = decode_bytes_with pFrame
+  decode = decodeBytesWith pFrame

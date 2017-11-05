@@ -1,23 +1,37 @@
 module Net.Tcp.Format where
+
 import           Data.Bits (shiftR)
 import           Data.Word (Word16, Word32, Word8)
 
-data TcpFlag = NS | CWR | ECE | URG | ACK | PUH | RST | SYN | FIN deriving (Eq, Enum, Ord)
+newtype TcpOffset = TcpOffset Word8 deriving (Eq, Ord)
 
-tcp_flag_mask = shiftR 0x0100 . fromEnum :: TcpFlag -> Word16
+data TcpFlag = NS
+             | CWR
+             | ECE
+             | URG
+             | ACK
+             | PUH
+             | RST
+             | SYN
+             | FIN
+             deriving (Eq, Enum, Ord)
 
-data TcpHeader = TcpHeader { tcp_source_port :: Word16
-                           , tcp_desc_port   :: Word16
-                           , seq             :: Word32
-                           , ack             :: Word32
-                           , offset          :: Word8
-                           , flags           :: [TcpFlag]
-                           , window_size     :: Word16
-                           , tcp_check_sum   :: Word16
-                           , urg_pointer     :: Word16 }
+tcpFlagMask = shiftR 0x0100 . fromEnum :: TcpFlag -> Word16
 
-data TcpOptionalHeader = TcpOptionalHeader [Word8]
+data TcpHeader = TcpHeader { tcpSrcPort    :: Word16
+                           , tcpDstPort    :: Word16
+                           , seq           :: Word32
+                           , ack           :: Word32
+                           , offset        :: TcpOffset
+                           , flags         :: [TcpFlag]
+                           , tcpWindowSize :: Word16
+                           , tcpIpCheckSum :: Word16
+                           , urgPointer    :: Word16
+                           }
+
+newtype TcpOptionalHeader = TcpOptionalHeader [Word8]
 
 data TcpPacket = TcpPacket { tcpHeader         :: TcpHeader
                            , tcpOptionalHeader :: Maybe TcpOptionalHeader
-                           , tcp_data          :: [Word8] }
+                           , tcpData           :: [Word8]
+                           }

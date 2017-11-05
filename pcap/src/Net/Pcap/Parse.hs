@@ -1,19 +1,25 @@
 module Net.Pcap.Parse where
 
+import           Control.Monad                 (replicateM)
 import qualified Data.ByteString               as BS (readFile)
-import           Misc.Parse                    (anyWord16, anyWord32, pByteN)
-import           Net.Pcap.Format
+import           Data.Word.Compat              (byteSwap16, byteSwap32)
+import           Misc.Parse                    (nBytes, word16, word32)
+import           Net.Pcap.Format               (Block (Block),
+                                                GlobalHeader (GlobalHeader),
+                                                Hex32 (Hex32),
+                                                PacketHeader (PacketHeader),
+                                                PcapFile (PcapFile), inclLen)
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many, parse)
 
 
-pGlobalHeader = do { magic <- anyWord32
-                   ; versionMajor <- anyWord16
-                   ; versionMinor <- anyWord16
-                   ; thisZone <- anyWord32
-                   ; sigfigs <- anyWord32
-                   ; snaplen <- anyWord32
-                   ; network <- anyWord32
+pGlobalHeader = do { magic <- fmap (Hex32 . byteSwap32) word32
+                   ; versionMajor <- fmap byteSwap16 word16
+                   ; versionMinor <- fmap byteSwap16 word16
+                   ; thisZone <- word32
+                   ; sigfigs <- word32
+                   ; snaplen <- fmap byteSwap32 word32
+                   ; network <- fmap byteSwap32 word32
                    ; return $ GlobalHeader
                      magic
                      versionMajor
@@ -24,10 +30,7 @@ pGlobalHeader = do { magic <- anyWord32
                      network
                    } :: Parser GlobalHeader
 
-pPacketHeader = do { tsSec   <- anyWord32
-                   ; tsUsec  <- anyWord32
-                   ; inclLen <- anyWord32
-                   ; origLen <- anyWord32
+pPacketHeader = do { [tsSec, tsUsec, inclLen, origLen] <- replicateM 4 (fmap byteSwap32 word32)
                    ; return $ PacketHeader
                      tsSec
                      tsUsec
@@ -36,7 +39,7 @@ pPacketHeader = do { tsSec   <- anyWord32
                    } :: Parser PacketHeader
 
 pBlock = do { packetHeader <- pPacketHeader
-            ; packetData <- pByteN (inclLen packetHeader)
+            ; packetData <- nBytes (inclLen packetHeader)
             ; return $ Block packetHeader packetData
             } :: Parser Block
 

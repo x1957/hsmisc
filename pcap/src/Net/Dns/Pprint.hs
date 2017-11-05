@@ -1,5 +1,7 @@
 {-# LANGUAGE StandaloneDeriving #-}
+
 module Net.Dns.Pprint where
+
 import           Net.Dns.Format (DnsAdditional (DnsAdditional),
                                  DnsAnswer (DnsAnswer),
                                  DnsAuthority (DnsAuthority),

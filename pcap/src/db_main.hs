@@ -39,10 +39,10 @@ memory conn file =
   mapM_ (save_ip_packet conn)
 
 save_ip_packet conn ipp =
-  query conn ip_sql [ toSql . fromEnum . tot_len $ iph
+  query conn ip_sql [ toSql . fromEnum . ipPacketTotLen $ iph
                     , toSql . fromEnum . protocol $ iph
-                    , toSql . show_ip . src_addr $ iph
-                    , toSql . show_ip . dst_addr $ iph ]
+                    , toSql . show_ip . ipSrcAddr $ iph
+                    , toSql . show_ip . ipDstAddr $ iph ]
   where
     ip_sql = "insert into ip_packet (tot_len, protocol, src_addr, dst_addr) values (?, ?, ?, ?);"
     iph = ipHeader ipp

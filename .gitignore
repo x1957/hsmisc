@@ -7,3 +7,4 @@ cabal-dev
 *.exe
 *.hs~
 **/bin/*
+*.log

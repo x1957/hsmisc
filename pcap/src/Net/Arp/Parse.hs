@@ -1,24 +1,23 @@
 module Net.Arp.Parse where
-import           Misc.Binary            (FromBytes (..))
-import           Misc.Parse             (anyByte, anyWord16, anyWord32,
-                                         decode_bytes_with)
-import           Misc.Sure              (sure)
-import           Net.Arp.Format
+
+import           Misc.Binary            (FromBytes, decode)
+import           Misc.Parse             (anyByte, decodeBytesWith, word16,
+                                         word32)
+import           Net.Arp.Format         (ArpFrame (ArpFrame))
 import           Net.Link.Parse         (pMacAddress)
 import           Text.Parsec.ByteString (Parser)
 
-pArpFrame = do { ht <- anyWord16
-               ; pt <- anyWord16
+pArpFrame = do { ht <- word16
+               ; pt <- word16
                ; hl <- anyByte
                ; pl <- anyByte
-               ; op <- anyWord16
+               ; op <- word16
                ; sha <- pMacAddress
-               ; spa <- anyWord32
+               ; spa <- word32
                ; tha <- pMacAddress
-               ; tpa <- anyWord32
-               ; return $ ArpFrame ht pt hl pl op sha spa tha tpa } :: Parser ArpFrame
-
-decode_arp_frame = sure . decode_bytes_with pArpFrame
+               ; tpa <- word32
+               ; return $ ArpFrame ht pt hl pl op sha spa tha tpa
+               } :: Parser ArpFrame
 
 instance FromBytes ArpFrame where
-  decode = decode_bytes_with pArpFrame
+  decode = decodeBytesWith pArpFrame

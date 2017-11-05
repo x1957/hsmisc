@@ -9,7 +9,7 @@ qword2dwords :: Word32 -> [Word16]
 qword2dwords qw = map (fromIntegral . fromEnum) [qw `shiftR` 16, qw]
 
 qword2words :: Word32 -> [Word8]
-qword2words = concat . map dword2words . qword2dwords
+qword2words = concatMap dword2words . qword2dwords
 
 class Binary a where
   encode :: a -> [Word8]

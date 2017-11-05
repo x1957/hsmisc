@@ -5,28 +5,24 @@ module Main where
 import           Control.Monad      ((>=>))
 import           Data.List          (intercalate)
 import           Data.Maybe         (mapMaybe)
+import           Misc.Parse         (ParseResult)
 import           Misc.Plain         (plain)
 import           Misc.Sure          (sure)
 import           Net.Dns.Format     (DnsMessage, dnsQuestion, qEntries, qName)
-import           Net.PcapNg         (PcapNGFile, blockBody, blocks, link_packet,
-                                     pPcapNGFormatFromFile)
-import           Query              (Query, query)
+import           Net.PcapNg         (PcapNGFile, pPcapNGFormatFromFile)
+import           Query              (Query, linkPackets, query)
 import           System.Environment (getArgs, getProgName)
-import           Text.Parsec.Error  (ParseError)
-
-type ParseResult a = Either ParseError a
 
 view :: forall a . Show a => Query a -> FilePath -> IO ()
 view q file = fmap (runQuery q) (pPcapNGFormatFromFile file :: IO (ParseResult PcapNGFile)) >>=
               (mapM_ print :: [a] -> IO ())
 
 runQuery :: Query a -> ParseResult PcapNGFile -> [a]
-runQuery q = mapMaybe (Just . blockBody >=> link_packet >=> q) . blocks . sure
+runQuery q = mapMaybe q . linkPackets . sure
 
-t_dns_queries = (query :: Query DnsMessage) >=>
-                return . plain . (intercalate ",") . map (intercalate "." . qName) . qEntries . dnsQuestion
+queriedDomains = plain . intercalate "," . map (intercalate "." . qName) . qEntries . dnsQuestion
 
-dumpDnsQueries [file] = view t_dns_queries file
+dumpDnsQueries [file] = view ((query :: Query DnsMessage) >=> return . queriedDomains) file
 dumpDnsQueries _ = do
     cmd <- getProgName
     putStrLn $ "Usage:\n\t " ++ cmd ++ " <tcpdump-data>"

@@ -1,6 +1,5 @@
 import           App.Usage                (appF)
 import           Codec.Binary.Base64      (encode)
-import           Control.Monad            ((>=>))
 import           Data.Maybe               (mapMaybe)
 import           Database.HDBC            as HDBC
 import           Database.HDBC.PostgreSQL
@@ -33,15 +32,14 @@ memoryF file = with_conn $ \conn -> memory conn file
 
 memory conn file =
   pPcapNGFormatFromFile file >>=
-  return . sure >>=
-  return . mapMaybe (Just . blockBody >=> link_packet >=> (Q.query :: Q.Query IpPacket)) . blocks >>=
+  return . mapMaybe (Q.query :: Q.Query IpPacket) . Q.linkPackets . sure >>=
   mapM_ (save_ip_packet conn)
 
 save_ip_packet conn ipp =
-  query conn ip_sql [ toSql . fromEnum . tot_len $ iph
+  query conn ip_sql [ toSql . fromEnum . ipPacketTotLen $ iph
                     , toSql . fromEnum . protocol $ iph
-                    , toSql . show . src_addr $ iph
-                    , toSql . show . dst_addr $ iph
+                    , toSql . show . ipSrcAddr $ iph
+                    , toSql . show . ipDstAddr $ iph
                     , toSql . encode . ipData $ ipp ]
   where
     ip_sql = "insert into ip_packet (tot_len, protocol, src_addr, dst_addr, payload_base64) values (?, ?, ?, ?, ?);"

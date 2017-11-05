@@ -1,26 +1,27 @@
 module Net.Udp.Parse where
+
 import           Misc.Binary                   (FromBytes (..))
-import           Misc.Parse                    (anyByte, anyWord16,
-                                                decode_bytes_with)
-import           Misc.Sure
-import           Net.Udp.Format
+import           Misc.Parse                    (anyByte, decodeBytesWith,
+                                                word16)
+import           Net.Udp.Format                (UdpHeader (UdpHeader),
+                                                UdpPacket (UdpPacket))
 import           Text.Parsec.ByteString        (Parser)
 import           Text.ParserCombinators.Parsec (many)
 
-pUdpHeader = do { sp <- anyWord16
-                ; dp <- anyWord16
-                ; len <- anyWord16
-                ; sum <- anyWord16
-                ; return $ UdpHeader sp dp len sum } :: Parser UdpHeader
+pUdpHeader = do { sp <- word16
+                ; dp <- word16
+                ; len <- word16
+                ; sum <- word16
+                ; return $ UdpHeader sp dp len sum
+                } :: Parser UdpHeader
 
 pUdpPacket = do { uh <- pUdpHeader
                 ; ud <- many anyByte
-                ; return $ UdpPacket uh ud } :: Parser UdpPacket
-
-decode_udp_packet = sure . decode_bytes_with pUdpPacket
+                ; return $ UdpPacket uh ud
+                } :: Parser UdpPacket
 
 instance FromBytes UdpHeader where
-  decode = decode_bytes_with pUdpHeader
+  decode = decodeBytesWith pUdpHeader
 
 instance FromBytes UdpPacket where
-  decode = decode_bytes_with pUdpPacket
+  decode = decodeBytesWith pUdpPacket

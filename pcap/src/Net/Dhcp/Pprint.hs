@@ -23,7 +23,7 @@ instance Show DhcpMessage where
          _file
          _opts
        ) =
-    let opts = filter (\opts -> case opts of Pad -> False; End -> False; _ -> True) $ dhcp_options _opts
+    let opts = filter (\opts -> case opts of Pad -> False; End -> False; _ -> True) $ dhcpOptions _opts
     in  unlines $
     [ printf "op: 0x%02x, htype: 0x%02x, hlen: 0x%02x, hops: 0x%02x" op htype hlen hopts
     , printf "xid: 0x%08x" xid

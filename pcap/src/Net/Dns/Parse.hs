@@ -1,11 +1,11 @@
 module Net.Dns.Parse where
+
 import           Control.Monad                 (replicateM)
 import           Data.Bits                     (shiftR, (.&.))
 import           Language.Haskell.TH.Ppr       (bytesToString)
 import           Misc.Binary                   (FromBytes (..))
-import           Misc.Parse                    (anyByte, anyWord16,
-                                                decode_bytes_with)
-import           Misc.Sure                     (sure)
+import           Misc.Parse                    (anyByte, decodeBytesWith,
+                                                word16)
 import           Net.Dns.Format                (DnsHeader (DnsHeader, qnCount),
                                                 DnsMessage (DnsMessage),
                                                 DnsQuestion (DnsQuestion),
@@ -24,7 +24,7 @@ pFlags flg =
   in (qr, opcode, aa, tc, rd, ra, z, rcode)
 
 pDnsHeader = do
-  [_id, _flags, c1, c2, c3, c4] <- replicateM 6 anyWord16
+  [_id, _flags, c1, c2, c3, c4] <- replicateM 6 word16
   let (qr, opcode, aa, tc, rd, ra, z, rcode) = pFlags _flags
   return $ DnsHeader _id qr opcode aa tc rd ra z rcode c1 c2 c3 c4
 
@@ -37,8 +37,8 @@ pDomainName = pLabels []
 
 pDnsQuestionEntry = do
   qName <- pDomainName
-  qType <- anyWord16
-  qClass <- anyWord16
+  qType <- word16
+  qClass <- word16
   return $ DnsQuestionEntry qName qType qClass
 
 pDnsMessage = do
@@ -47,7 +47,5 @@ pDnsMessage = do
   _bs <- many anyByte
   return $ DnsMessage header (DnsQuestion qEntries) Nothing Nothing Nothing
 
-decode_dns_packet = sure . decode_bytes_with pDnsMessage
-
 instance FromBytes DnsMessage where
-  decode = decode_bytes_with pDnsMessage
+  decode = decodeBytesWith pDnsMessage
